@@ -1,3 +1,5 @@
+# When running only the API (./scripts/docker-run.sh), start DBs first (./scripts/start-databases.sh)
+# so api, postgres, and mongo share the same network and api can resolve hostnames "postgres" and "mongo".
 services:
   api:
     build:
@@ -8,3 +10,46 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
+      - App__ApiBaseUrl=http://localhost:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=exampleproject;Username=exampleproject;Password=exampleproject
+      # Use host so API sees the same Mongo as population (host localhost:27017 -> mongo container)
+      - Mongo__ConnectionString=mongodb://host.docker.internal:27017
+      - Mongo__DatabaseName=exampleproject
+      - Mongo__AuditCollectionName=audit
+    volumes:
+      - dp_keys:/root/.aspnet/DataProtection-Keys
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: exampleproject
+      POSTGRES_PASSWORD: exampleproject
+      POSTGRES_DB: exampleproject
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U exampleproject -d exampleproject"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres_data:
+  mongo_data:
+  dp_keys:

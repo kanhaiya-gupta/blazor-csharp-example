@@ -3,6 +3,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>ExampleProject.Api</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExampleProject.Core\ExampleProject.Core.csproj" />

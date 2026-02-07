@@ -9,3 +9,7 @@ bin/ obj/ out/
 
 # OS
 .DS_Store Thumbs.db
+
+# Population scripts (secrets)
+.env
+population/.env

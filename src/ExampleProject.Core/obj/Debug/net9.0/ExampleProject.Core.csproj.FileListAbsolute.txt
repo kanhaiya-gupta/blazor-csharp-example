@@ -9,3 +9,4 @@ C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Deb
 C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\refint\ExampleProject.Core.dll
 C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\ExampleProject.Core.pdb
 C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\ref\ExampleProject.Core.dll
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\ExampleProject.Core.sourcelink.json

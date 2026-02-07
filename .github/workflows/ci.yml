@@ -40,6 +40,62 @@ jobs:
       - name: Test
         run: dotnet test ExampleProject.sln -c Release --no-build --verbosity normal
 
+  test-with-databases:
+    name: Test with Postgres & Mongo
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: exampleproject
+          POSTGRES_PASSWORD: exampleproject
+          POSTGRES_DB: exampleproject
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U exampleproject -d exampleproject"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=exampleproject;Username=exampleproject;Password=exampleproject"
+      Mongo__ConnectionString: "mongodb://localhost:27017"
+      Mongo__DatabaseName: exampleproject
+      Mongo__AuditCollectionName: audit
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore ExampleProject.sln
+
+      - name: Build (Release)
+        run: dotnet build ExampleProject.sln -c Release --no-restore
+
+      - name: Test with real databases
+        run: dotnet test ExampleProject.sln -c Release --no-build --verbosity normal
+
   format:
     name: Code format
     runs-on: ubuntu-latest

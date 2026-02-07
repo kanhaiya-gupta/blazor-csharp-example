@@ -13,3 +13,4 @@ C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructu
 C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\refint\ExampleProject.Infrastructure.dll
 C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ExampleProject.Infrastructure.pdb
 C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ref\ExampleProject.Infrastructure.dll
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ExampleProject.Infrastructure.sourcelink.json
