@@ -1,0 +1,2 @@
+# Force LF for shell scripts (avoids CRLF issues in WSL/Git Bash)
+*.sh text eol=lf
