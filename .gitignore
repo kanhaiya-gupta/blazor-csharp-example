@@ -1,0 +1,11 @@
+# Build
+bin/ obj/ out/
+*.user *.suo *.cache
+.vs/
+*.dll *.pdb *.exe
+
+# IDE
+.idea/ *.rsuser
+
+# OS
+.DS_Store Thumbs.db
