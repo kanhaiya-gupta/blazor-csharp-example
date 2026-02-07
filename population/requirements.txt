@@ -1,0 +1,4 @@
+# Data population scripts (PostgreSQL + MongoDB)
+psycopg[binary]>=3.1
+pymongo>=4.6
+python-dotenv>=1.0
