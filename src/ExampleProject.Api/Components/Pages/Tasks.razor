@@ -1,0 +1,23 @@
+@namespace ExampleProject.Api.Components.Pages
+@page "/tasks"
+@rendermode InteractiveServer
+<PageTitle>Example tasks — ExampleProject</PageTitle>
+
+<section class="section">
+    <h1 class="page-title">Example tasks</h1>
+    <p class="page-subtitle">Suggested steps to extend the microservice.</p>
+    <div class="section-block">
+        <h2 class="section-title">Tasks</h2>
+        <TaskList Tasks="_exampleTasks" />
+    </div>
+</section>
+
+@code {
+    private readonly IReadOnlyList<ExampleTaskItem> _exampleTasks = new List<ExampleTaskItem>
+    {
+        new() { Title = "Build microservice", Description = "Design and deploy the API with clean layers (Core, Infrastructure, Api)." },
+        new() { Title = "Add tests", Description = "Unit tests for Core, integration tests for API endpoints." },
+        new() { Title = "Deploy with Docker", Description = "Containerize the app and run with docker-compose." },
+        new() { Title = "Extend REST API", Description = "Add resources (e.g. flexibility offers), DTOs, and validation." }
+    };
+}

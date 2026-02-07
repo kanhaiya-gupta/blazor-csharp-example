@@ -1,0 +1,21 @@
+@namespace ExampleProject.Api.Components.Layout
+@inherits LayoutComponentBase
+
+<div class="layout">
+    <nav class="nav">
+        <div class="nav__inner">
+            <NavLink class="nav__brand" href="/" Match="NavLinkMatch.All">ExampleProject</NavLink>
+            <div class="nav__links">
+                <NavLink class="nav__link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+                <NavLink class="nav__link" href="/overview">Overview</NavLink>
+                <NavLink class="nav__link" href="/tasks">Example tasks</NavLink>
+            </div>
+        </div>
+    </nav>
+    <main class="main">
+        @Body
+    </main>
+    <footer class="footer">
+        <p>ExampleProject · Built with Blazor Server &amp; ASP.NET Core</p>
+    </footer>
+</div>

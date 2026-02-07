@@ -1,0 +1,15 @@
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\bin\Debug\net9.0\ExampleProject.Infrastructure.deps.json
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\bin\Debug\net9.0\ExampleProject.Infrastructure.dll
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\bin\Debug\net9.0\ExampleProject.Infrastructure.pdb
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\bin\Debug\net9.0\ExampleProject.Core.dll
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\bin\Debug\net9.0\ExampleProject.Core.pdb
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ExampleProject.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ExampleProject.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ExampleProject.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ExampleProject.Infrastructure.AssemblyInfo.cs
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ExampleProject.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ExampleP.011F1B7A.Up2Date
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ExampleProject.Infrastructure.dll
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\refint\ExampleProject.Infrastructure.dll
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ExampleProject.Infrastructure.pdb
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Infrastructure\obj\Debug\net9.0\ref\ExampleProject.Infrastructure.dll

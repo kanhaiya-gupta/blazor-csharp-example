@@ -1,0 +1,11 @@
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\ExampleProject.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\ExampleProject.Core.AssemblyInfoInputs.cache
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\ExampleProject.Core.AssemblyInfo.cs
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\ExampleProject.Core.csproj.CoreCompileInputs.cache
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\bin\Debug\net9.0\ExampleProject.Core.deps.json
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\bin\Debug\net9.0\ExampleProject.Core.dll
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\bin\Debug\net9.0\ExampleProject.Core.pdb
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\ExampleProject.Core.dll
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\refint\ExampleProject.Core.dll
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\ExampleProject.Core.pdb
+C:\Users\kanha\Desktop\cs_example\ExampleProject\src\ExampleProject.Core\obj\Debug\net9.0\ref\ExampleProject.Core.dll

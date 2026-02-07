@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "73QU+AHHHmw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Web\\ExampleProject.Web.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\kanha\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.0\\microsoft.extensions.configuration.abstractions.9.0.0.nupkg.sha512",
+    "C:\\Users\\kanha\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.0\\microsoft.extensions.dependencyinjection.abstractions.9.0.0.nupkg.sha512",
+    "C:\\Users\\kanha\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.0\\microsoft.extensions.primitives.9.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

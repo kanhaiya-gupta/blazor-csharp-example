@@ -1,0 +1,362 @@
+{
+  "Version": 1,
+  "Hash": "mmjSogjTCTDiS6NOoMhU0KGHohvmogYaQQsd380Ivd4=",
+  "Source": "ExampleProject.Api",
+  "BasePath": "_content/ExampleProject.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ExampleProject.Api\\wwwroot",
+      "Source": "ExampleProject.Api",
+      "ContentRoot": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\wwwroot\\",
+      "BasePath": "_content/ExampleProject.Api",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\obj\\Debug\\net9.0\\compressed\\xh87edukms-1rtwpv5dkv.gz",
+      "SourceId": "ExampleProject.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\obj\\Debug\\net9.0\\compressed\\",
+      "BasePath": "_content/ExampleProject.Api",
+      "RelativePath": "css/app#[.{fingerprint=1rtwpv5dkv}]?.css.gz",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Alternative",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\wwwroot\\css\\app.css",
+      "AssetTraitName": "Content-Encoding",
+      "AssetTraitValue": "gzip",
+      "Fingerprint": "71t8iowa0i",
+      "Integrity": "BYlE5Ifp7DjbHbbUAfPXlI3TMptQL8tPIQSkTKnoOoU=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\wwwroot\\css\\app.css"
+    },
+    {
+      "Identity": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\wwwroot\\css\\app.css",
+      "SourceId": "ExampleProject.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\wwwroot\\",
+      "BasePath": "_content/ExampleProject.Api",
+      "RelativePath": "css/app#[.{fingerprint}]?.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "1rtwpv5dkv",
+      "Integrity": "nYN2e2uqZZVtqVR2MuuXnjJc+/uu63TjgSpSOkc2HUw=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\app.css"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "css/app.1rtwpv5dkv.css",
+      "AssetFile": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\obj\\Debug\\net9.0\\compressed\\xh87edukms-1rtwpv5dkv.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000489715965"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2041"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"BYlE5Ifp7DjbHbbUAfPXlI3TMptQL8tPIQSkTKnoOoU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 07 Feb 2026 08:22:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"nYN2e2uqZZVtqVR2MuuXnjJc+/uu63TjgSpSOkc2HUw=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "1rtwpv5dkv"
+        },
+        {
+          "Name": "label",
+          "Value": "css/app.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-nYN2e2uqZZVtqVR2MuuXnjJc+/uu63TjgSpSOkc2HUw="
+        }
+      ]
+    },
+    {
+      "Route": "css/app.1rtwpv5dkv.css",
+      "AssetFile": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\wwwroot\\css\\app.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7882"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"nYN2e2uqZZVtqVR2MuuXnjJc+/uu63TjgSpSOkc2HUw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 07 Feb 2026 08:22:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "1rtwpv5dkv"
+        },
+        {
+          "Name": "label",
+          "Value": "css/app.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-nYN2e2uqZZVtqVR2MuuXnjJc+/uu63TjgSpSOkc2HUw="
+        }
+      ]
+    },
+    {
+      "Route": "css/app.1rtwpv5dkv.css.gz",
+      "AssetFile": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\obj\\Debug\\net9.0\\compressed\\xh87edukms-1rtwpv5dkv.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2041"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"BYlE5Ifp7DjbHbbUAfPXlI3TMptQL8tPIQSkTKnoOoU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 07 Feb 2026 08:22:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "1rtwpv5dkv"
+        },
+        {
+          "Name": "label",
+          "Value": "css/app.css.gz"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-BYlE5Ifp7DjbHbbUAfPXlI3TMptQL8tPIQSkTKnoOoU="
+        }
+      ]
+    },
+    {
+      "Route": "css/app.css",
+      "AssetFile": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\obj\\Debug\\net9.0\\compressed\\xh87edukms-1rtwpv5dkv.gz",
+      "Selectors": [
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip",
+          "Quality": "0.000489715965"
+        }
+      ],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2041"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"BYlE5Ifp7DjbHbbUAfPXlI3TMptQL8tPIQSkTKnoOoU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 07 Feb 2026 08:22:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "W/\"nYN2e2uqZZVtqVR2MuuXnjJc+/uu63TjgSpSOkc2HUw=\""
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-nYN2e2uqZZVtqVR2MuuXnjJc+/uu63TjgSpSOkc2HUw="
+        }
+      ]
+    },
+    {
+      "Route": "css/app.css",
+      "AssetFile": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\wwwroot\\css\\app.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "7882"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"nYN2e2uqZZVtqVR2MuuXnjJc+/uu63TjgSpSOkc2HUw=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 07 Feb 2026 08:22:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-nYN2e2uqZZVtqVR2MuuXnjJc+/uu63TjgSpSOkc2HUw="
+        }
+      ]
+    },
+    {
+      "Route": "css/app.css.gz",
+      "AssetFile": "C:\\Users\\kanha\\Desktop\\cs_example\\ExampleProject\\src\\ExampleProject.Api\\obj\\Debug\\net9.0\\compressed\\xh87edukms-1rtwpv5dkv.gz",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2041"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"BYlE5Ifp7DjbHbbUAfPXlI3TMptQL8tPIQSkTKnoOoU=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 07 Feb 2026 08:22:51 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Encoding",
+          "Value": "gzip"
+        },
+        {
+          "Name": "Vary",
+          "Value": "Content-Encoding"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-BYlE5Ifp7DjbHbbUAfPXlI3TMptQL8tPIQSkTKnoOoU="
+        }
+      ]
+    }
+  ]
+}
