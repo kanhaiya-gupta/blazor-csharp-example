@@ -1,6 +1,0 @@
-C:\Users\kanha\Desktop\cs_example\ExampleProject\ExampleProject\bin\Debug\ExampleProject.dll
-C:\Users\kanha\Desktop\cs_example\ExampleProject\ExampleProject\bin\Debug\ExampleProject.pdb
-C:\Users\kanha\Desktop\cs_example\ExampleProject\ExampleProject\obj\Debug\ExampleProject.csproj.AssemblyReference.cache
-C:\Users\kanha\Desktop\cs_example\ExampleProject\ExampleProject\obj\Debug\ExampleProject.csproj.CoreCompileInputs.cache
-C:\Users\kanha\Desktop\cs_example\ExampleProject\ExampleProject\obj\Debug\ExampleProject.dll
-C:\Users\kanha\Desktop\cs_example\ExampleProject\ExampleProject\obj\Debug\ExampleProject.pdb
