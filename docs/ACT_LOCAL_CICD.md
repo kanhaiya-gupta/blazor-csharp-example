@@ -202,6 +202,42 @@ act workflow_dispatch -W .github/workflows/ci.yml -j build-and-test -j docker
 
 Recommendation: use act to validate **CI** and the **build** parts of CD/Release; do real pushes and release creation on GitHub.
 
+## Troubleshooting
+
+### “repository does not exist” / “not located inside a git repository”
+
+Run act from inside a **git repository** (after `git init` or cloning). act uses git for refs and may use `.gitignore` when copying files.
+
+### “The process cannot access the file because it is being used by another process” (`.vs/` or `FileContentIndex`)
+
+Visual Studio or Cursor is locking files under `.vs/`. act copies the project into the container and can’t read locked files.
+
+**Fix (pick one):**
+
+1. **Close the IDE** (Cursor/Visual Studio) so it releases the lock, then run act again from a terminal.
+2. **Run act from a separate clone** that isn’t open in the IDE:
+   ```bash
+   git clone <your-repo-url> ../ExampleProject-act && cd ../ExampleProject-act
+   act workflow_dispatch -W .github/workflows/ci.yml
+   ```
+3. Ensure **`.vs/`** is in `.gitignore` (it is in this repo). act respects `.gitignore` when copying; having the IDE closed avoids locks during the copy.
+
+### “Password required” when running CD (Log in to Container Registry)
+
+The CD workflow logs into GitHub Container Registry (ghcr.io) using `GITHUB_TOKEN`. Locally, act doesn’t provide a real token, so the login step fails with **Password required**. That’s expected.
+
+**Options:**
+
+- **Use GitHub for real CD:** Run the CD workflow from the Actions tab on GitHub when you want to build and push the image. Local act is for validating CI and the Docker *build* (use the CI workflow’s Docker job).
+- **Test push locally (optional):** If you need to test the full CD flow locally, use a [GitHub Personal Access Token](https://github.com/settings/tokens) with `write:packages` and pass it as a secret (never commit the token):
+  ```bash
+  act workflow_dispatch -W .github/workflows/cd.yml --input image_tag=latest -s GITHUB_TOKEN=ghp_yourTokenHere
+  ```
+
+### Docker not running
+
+Start Docker Desktop (or your Docker daemon) and run `docker ps` to confirm it’s working before running act.
+
 ## Quick reference
 
 ```bash
