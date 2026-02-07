@@ -1,0 +1,29 @@
+# Build and IDE
+**/bin/
+**/obj/
+**/out/
+.vs/
+*.user
+*.suo
+*.cache
+*.dll
+*.pdb
+*.exe
+
+# Git and docs (optional: remove if you want docs in image)
+.git/
+.gitignore
+**/README.md
+docs/
+
+# Tests (not needed in runtime image)
+tests/
+
+# Scripts and tooling
+scripts/
+create_structure.sh
+*.sh
+
+# OS
+.DS_Store
+Thumbs.db
