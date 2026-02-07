@@ -1,0 +1,380 @@
+@namespace ExampleProject.Api.Components.Pages
+@page "/dashboard"
+@rendermode InteractiveServer
+@inject IApiClient Api
+@implements IDisposable
+
+<PageTitle>Dashboard — ExampleProject</PageTitle>
+
+<section class="section">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">PostgreSQL story: meter readings (time-series) and alerts (anomaly detection).</p>
+
+    <div class="section-block dash-fig-block">
+        <div class="dash-fig-flow">
+            <div class="dash-fig-step">
+                <span class="dash-fig-icon" aria-hidden="true">📈</span>
+                <strong>Meter readings</strong>
+                <span class="dash-fig-desc">Time-series (MW) per plant</span>
+            </div>
+            <span class="dash-fig-arrow" aria-hidden="true">→</span>
+            <div class="dash-fig-step dash-fig-step--detect">
+                <span class="dash-fig-icon" aria-hidden="true">🔍</span>
+                <strong>Anomaly detection</strong>
+                <span class="dash-fig-desc">Spike (>3× avg), threshold rules</span>
+            </div>
+            <span class="dash-fig-arrow" aria-hidden="true">→</span>
+            <div class="dash-fig-step dash-fig-step--alerts">
+                <span class="dash-fig-icon" aria-hidden="true">⚠️</span>
+                <strong>Alerts</strong>
+                <span class="dash-fig-desc">Detected anomalies</span>
+            </div>
+        </div>
+        <div class="dash-fig-cards">
+            <div class="dash-fig-card">
+                <span class="dash-fig-card-value">@(_loadingReadings ? "…" : _readings.Count.ToString())</span>
+                <span class="dash-fig-card-label">Meter readings (recent)</span>
+            </div>
+            <div class="dash-fig-card">
+                <span class="dash-fig-card-value">@(_loadingAlerts ? "…" : _alerts.Count.ToString())</span>
+                <span class="dash-fig-card-label">Alerts (recent)</span>
+            </div>
+            <div class="dash-fig-card">
+                <span class="dash-fig-card-value">@(_loadingAlerts ? "…" : _alerts.Count(a => !a.ResolvedAt.HasValue).ToString())</span>
+                <span class="dash-fig-card-label">Open</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-block">
+        <h2 class="section-title">Time-series chart</h2>
+        <p class="text-muted">Meter readings (blue line), anomalies (red dots). X-axis: time range of loaded data. Updates every minute.</p>
+        @if (_loadingReadings && _readings.Count == 0)
+        {
+            <LoadingSpinner Text="Loading chart data…" />
+        }
+        else if (_readings.Count == 0)
+        {
+            <EmptyState Icon="📈" Title="No chart data" Description="Run the population script to seed MeterReadings." />
+        }
+        else
+        {
+            <div class="chart-wrap">
+                <svg class="chart-svg" viewBox="0 0 700 300" preserveAspectRatio="xMidYMid meet" aria-label="Meter readings over time with anomalies">
+                    <g class="chart-grid" transform="translate(50, 20)">
+                        @foreach (var y in _chartYLabels)
+                        {
+                            <line class="chart-grid-line" x1="0" y1="@y.Px" x2="630" y2="@y.Px" />
+                            @((MarkupString)GetYAxisLabelMarkup(y))
+                        }
+                        @foreach (var x in _chartXLabels)
+                        {
+                            <line class="chart-grid-line" x1="@x.Px" y1="0" x2="@x.Px" y2="220" />
+                            @((MarkupString)GetXAxisLabelMarkup(x))
+                        }
+                    </g>
+                    <g class="chart-plot" transform="translate(50, 20)">
+                        @foreach (var series in _chartSeries)
+                        {
+                            <path class="chart-line chart-line--plant" d="@series.Path" fill="none" style="stroke: @series.Color" stroke-width="2" stroke-linejoin="round" />
+                        }
+                        @foreach (var pt in _chartAnomalyPoints)
+                        {
+                            <circle class="chart-anomaly-dot" cx="@pt.X" cy="@pt.Y" r="6" title="@pt.Tooltip" />
+                        }
+                    </g>
+                </svg>
+            </div>
+            <p class="chart-legend">
+                @foreach (var series in _chartSeries)
+                {
+                    <span class="chart-legend-item"><span class="chart-legend-line" style="background: @series.Color"></span> @series.Label</span>
+                }
+                <span class="chart-legend-item"><span class="chart-legend-dot"></span> Anomaly</span>
+            </p>
+        }
+    </div>
+
+    <div class="section-block">
+        <h2 class="section-title">Recent alerts</h2>
+        <p class="text-muted">Detected anomalies (spike, threshold exceeded) from meter data.</p>
+        @if (_loadingAlerts)
+        {
+            <LoadingSpinner Text="Loading alerts…" />
+        }
+        else if (!string.IsNullOrEmpty(_errorAlerts))
+        {
+            <ErrorMessage Message="_errorAlerts" OnRetry="LoadData" />
+        }
+        else if (_alerts.Count == 0)
+        {
+            <EmptyState Icon="⚠️" Title="No alerts" Description="Run the population script to seed Alerts (PostgreSQL)." />
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table" role="grid">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Severity</th>
+                            <th scope="col">Message</th>
+                            <th scope="col">Resolved</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in _alerts)
+                        {
+                            <tr>
+                                <td class="text-muted">@a.Timestamp.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td><code class="code-inline">@a.Type</code></td>
+                                <td><span class="badge badge--@(a.Severity == "High" ? "error" : a.Severity == "Medium" ? "warning" : "muted")">@a.Severity</span></td>
+                                <td>@a.Message</td>
+                                <td class="text-muted">@(a.ResolvedAt.HasValue ? a.ResolvedAt.Value.ToString("yyyy-MM-dd HH:mm") : "–")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div class="section-block">
+        <h2 class="section-title">Recent meter readings</h2>
+        <p class="text-muted">Time-series data (MW) per plant – input for anomaly detection.</p>
+        @if (_loadingReadings)
+        {
+            <LoadingSpinner Text="Loading meter readings…" />
+        }
+        else if (!string.IsNullOrEmpty(_errorReadings))
+        {
+            <ErrorMessage Message="_errorReadings" OnRetry="LoadData" />
+        }
+        else if (_readings.Count == 0)
+        {
+            <EmptyState Icon="📈" Title="No meter readings" Description="Run the population script to seed MeterReadings (PostgreSQL)." />
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table" role="grid">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time</th>
+                            <th scope="col">Plant</th>
+                            <th scope="col">Value</th>
+                            <th scope="col">Metric</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in _readings)
+                        {
+                            <tr>
+                                <td class="text-muted">@r.Timestamp.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@(r.PlantId.HasValue ? (_plants.FirstOrDefault(p => p.Id == r.PlantId)?.Name ?? r.PlantId.Value.ToString("N")) : "–")</td>
+                                <td>@r.Value.ToString("N2")</td>
+                                <td>@(r.MetricType ?? "–")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private List<AlertDto> _alerts = new();
+    private List<MeterReadingDto> _readings = new();
+    private List<PlantDto> _plants = new();
+    private bool _loadingAlerts = true;
+    private bool _loadingReadings = true;
+    private string? _errorAlerts;
+    private string? _errorReadings;
+    private List<ChartSeries> _chartSeries = new();
+    private List<ChartAnomalyPoint> _chartAnomalyPoints = new();
+    private List<ChartAxisLabel> _chartXLabels = new();
+    private List<ChartAxisLabel> _chartYLabels = new();
+    private static readonly TimeSpan ChartRefreshInterval = TimeSpan.FromMinutes(1);
+    private Timer? _refreshTimer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+        _refreshTimer = new Timer(_ => _ = RefreshChartAsync(), null, ChartRefreshInterval, ChartRefreshInterval);
+    }
+
+    public void Dispose() => _refreshTimer?.Dispose();
+
+    private async Task RefreshChartAsync()
+    {
+        await InvokeAsync(async () =>
+        {
+            await LoadData();
+        });
+    }
+
+    private async Task LoadData()
+    {
+        _errorAlerts = null;
+        _errorReadings = null;
+        _loadingAlerts = true;
+        _loadingReadings = true;
+        StateHasChanged();
+
+        try
+        {
+            _alerts = (await Api.GetAlertsRecentAsync(20)).ToList();
+        }
+        catch (Exception ex)
+        {
+            _errorAlerts = ex.Message;
+            _alerts = new List<AlertDto>();
+        }
+
+        try
+        {
+            _readings = (await Api.GetMeterReadingsRecentAsync(60)).ToList();
+        }
+        catch (Exception ex)
+        {
+            _errorReadings = ex.Message;
+            _readings = new List<MeterReadingDto>();
+        }
+
+        try
+        {
+            _plants = (await Api.GetPlantsAsync()).ToList();
+        }
+        catch
+        {
+            _plants = new List<PlantDto>();
+        }
+
+        try
+        {
+            BuildChartData();
+        }
+        catch
+        {
+            _chartSeries.Clear();
+            _chartAnomalyPoints.Clear();
+            _chartXLabels.Clear();
+            _chartYLabels.Clear();
+            // Do not set _errorReadings: readings loaded fine; only the chart failed
+        }
+        finally
+        {
+            _loadingAlerts = false;
+            _loadingReadings = false;
+            StateHasChanged();
+        }
+    }
+
+    private void BuildChartData()
+    {
+        if (_readings.Count == 0)
+        {
+            _chartSeries.Clear();
+            _chartAnomalyPoints.Clear();
+            _chartXLabels.Clear();
+            _chartYLabels.Clear();
+            return;
+        }
+        const double plotW = 630;
+        const double plotH = 220;
+        var allReadings = _readings.OrderBy(r => r.Timestamp).ToList();
+        var tMin = allReadings[0].Timestamp;
+        var tMax = allReadings[^1].Timestamp;
+        var tMinTicks = tMin.UtcTicks;
+        var tMaxTicks = tMax.UtcTicks;
+        var tRange = tMaxTicks - tMinTicks;
+        if (tRange == 0) tRange = 1;
+        var plotValues = _readings.Select(r => (double)r.Value).ToList();
+        foreach (var a in _alerts.Where(a => a.Timestamp >= tMin && a.Timestamp <= tMax))
+        {
+            var candidates = a.PlantId.HasValue ? _readings.Where(r => r.PlantId == a.PlantId) : _readings;
+            var nearest = candidates.OrderBy(r => Math.Abs((r.Timestamp - a.Timestamp).Ticks)).FirstOrDefault();
+            if (nearest != null) plotValues.Add((double)nearest.Value);
+        }
+        var vMin = plotValues.Min();
+        var vMax = plotValues.Max();
+        var vPadding = Math.Max((vMax - vMin) * 0.1, 0.5);
+        var vLo = vMin - vPadding;
+        var vHi = vMax + vPadding;
+        var vRange = vHi - vLo;
+        if (vRange == 0) vRange = 1;
+
+        // Shared axes: X = time (same tMin..tMax for all), Y = value MW (same vLo..vHi for all)
+        double X(long ticks) => (ticks - tMinTicks) / (double)tRange * plotW;
+        double Y(double v) => plotH - (v - vLo) / vRange * plotH;
+
+        _chartSeries.Clear();
+        var plantPathPoints = new Dictionary<Guid, List<(double xPx, double yPx, DateTimeOffset Timestamp)>>();
+        var plantColors = new[] { "#3182ce", "#38a169", "#dd6b20", "#805ad5", "#d69e2e" };
+        var byPlant = _readings.GroupBy(r => r.PlantId).OrderBy(g => g.Key?.ToString() ?? "").ToList();
+        var colorIndex = 0;
+        foreach (var plantGroup in byPlant)
+        {
+            var plantReadings = plantGroup.OrderBy(r => r.Timestamp).ToList();
+            var pathPoints = new List<string>();
+            var points = new List<(double xPx, double yPx, DateTimeOffset Timestamp)>();
+            foreach (var r in plantReadings)
+            {
+                var xPx = Math.Round(X(r.Timestamp.UtcTicks), 1);
+                var yPx = Math.Round(Y((double)r.Value), 1);
+                pathPoints.Add($"{(pathPoints.Count == 0 ? "M" : "L")} {xPx:F1},{yPx:F1}");
+                points.Add((xPx, yPx, r.Timestamp));
+            }
+            plantPathPoints[plantGroup.Key ?? Guid.Empty] = points;
+            var path = string.Join(" ", pathPoints);
+            var color = colorIndex < plantColors.Length ? plantColors[colorIndex] : "#718096";
+            var label = plantGroup.Key.HasValue
+                ? (_plants.FirstOrDefault(p => p.Id == plantGroup.Key)?.Name ?? $"Plant {colorIndex + 1}")
+                : "Unassigned";
+            _chartSeries.Add(new ChartSeries(path, color, label));
+            colorIndex++;
+        }
+
+        _chartAnomalyPoints.Clear();
+        foreach (var a in _alerts)
+        {
+            if (a.Timestamp < tMin || a.Timestamp > tMax) continue;
+            // Use same-plant reading for Y when alert has PlantId, so anomaly sits on that plant’s level
+            if (!plantPathPoints.TryGetValue(a.PlantId ?? Guid.Empty, out var points) || points.Count == 0) continue;
+            var nearest = points.OrderBy(p => Math.Abs((p.Timestamp - a.Timestamp).Ticks)).First();
+            _chartAnomalyPoints.Add(new ChartAnomalyPoint(nearest.xPx, nearest.yPx, string.Format("{0:yyyy-MM-dd HH:mm} — {1}: {2}", a.Timestamp, a.Type, a.Message)));
+        }
+
+        _chartXLabels.Clear();
+        var xStep = allReadings.Count <= 5 ? 1 : Math.Max(1, allReadings.Count / 5);
+        for (var i = 0; i < allReadings.Count; i += xStep)
+        {
+            var r = allReadings[i];
+            _chartXLabels.Add(new ChartAxisLabel(X(r.Timestamp.UtcTicks), r.Timestamp.ToString("MM/dd HH:mm")));
+        }
+        if (allReadings.Count > 0 && (_chartXLabels.Count == 0 || _chartXLabels[^1].Px < plotW - 30))
+            _chartXLabels.Add(new ChartAxisLabel(plotW, tMax.ToString("MM/dd HH:mm")));
+
+        _chartYLabels.Clear();
+        for (var v = vLo; v <= vHi; v += vRange / 4)
+            _chartYLabels.Add(new ChartAxisLabel(Y(v), v.ToString("N1")));
+    }
+
+    private static string GetYAxisLabelMarkup(ChartAxisLabel y)
+    {
+        var escaped = System.Net.WebUtility.HtmlEncode(y.Label);
+        return $"<g class=\"chart-axis-label\" transform=\"translate(-5, {y.Px + 4:F1})\"><text text-anchor=\"end\" x=\"0\" y=\"0\">{escaped}</text></g>";
+    }
+
+    private static string GetXAxisLabelMarkup(ChartAxisLabel x)
+    {
+        var escaped = System.Net.WebUtility.HtmlEncode(x.Label);
+        return $"<g class=\"chart-axis-label chart-axis-label--x\" transform=\"translate({x.Px:F1}, 238)\"><text text-anchor=\"middle\" x=\"0\" y=\"0\">{escaped}</text></g>";
+    }
+
+    private record ChartSeries(string Path, string Color, string Label);
+    private record ChartAnomalyPoint(double X, double Y, string Tooltip);
+    private record ChartAxisLabel(double Px, string Label);
+}

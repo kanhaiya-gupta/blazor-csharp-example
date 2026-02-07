@@ -1,0 +1,21 @@
+@namespace ExampleProject.Api.Components.Shared
+
+<div class="empty-state">
+    <span class="empty-state__icon" aria-hidden="true">@Icon</span>
+    <p class="empty-state__title">@Title</p>
+    @if (!string.IsNullOrEmpty(Description))
+    {
+        <p class="empty-state__desc">@Description</p>
+    }
+    @if (ChildContent is not null)
+    {
+        <div class="empty-state__action">@ChildContent</div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Icon { get; set; } = "—";
+    [Parameter] public string Title { get; set; } = "No data";
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

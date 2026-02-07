@@ -1,0 +1,126 @@
+@namespace ExampleProject.Api.Components.Pages
+@page "/offers"
+@rendermode InteractiveServer
+@inject IApiClient Api
+
+<PageTitle>Offers — ExampleProject</PageTitle>
+
+<section class="section">
+    <h1 class="page-title">Offers</h1>
+    <p class="page-subtitle">Flexibility offers from PostgreSQL. List and create offers.</p>
+
+    <div class="section-block">
+        <h2 class="section-title">Create offer</h2>
+        <EditForm Model="_createRequest" OnValidSubmit="HandleCreateAsync" class="form form--inline">
+            <DataAnnotationsValidator />
+            <div class="form__row">
+                <div class="form__group">
+                    <label for="offer-name" class="form__label">Name</label>
+                    <InputText id="offer-name" class="form__input" @bind-Value="_createRequest.Name" placeholder="Offer name" />
+                </div>
+                <div class="form__group">
+                    <label for="offer-status" class="form__label">Status</label>
+                    <InputText id="offer-status" class="form__input" @bind-Value="_createRequest.Status" placeholder="Active" />
+                </div>
+                <div class="form__group form__group--actions">
+                    <button type="submit" class="btn btn--primary" disabled="@_creating">@(_creating ? "Creating…" : "Create")</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+
+    <div class="section-block">
+        <h2 class="section-title">All offers</h2>
+        @if (_loading)
+        {
+            <LoadingSpinner Text="Loading offers…" />
+        }
+        else if (!string.IsNullOrEmpty(_error))
+        {
+            <ErrorMessage Message="_error" OnRetry="LoadOffers" />
+        }
+        else if (_offers.Count == 0)
+        {
+            <EmptyState Icon="📋" Title="No offers yet" Description="Create an offer above to see it here." />
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table" role="grid">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var o in _offers)
+                        {
+                            <tr>
+                                <td>@o.Name</td>
+                                <td><span class="badge badge--@(o.Status.ToLowerInvariant() == "active" ? "success" : "muted")">@o.Status</span></td>
+                                <td class="text-muted">@o.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private List<OfferDto> _offers = new();
+    private CreateOfferDto _createRequest = new() { Name = "", Status = "Pending" };
+    private bool _loading = true;
+    private bool _creating;
+    private string? _error;
+
+    protected override async Task OnInitializedAsync() => await LoadOffers();
+
+    private async Task LoadOffers()
+    {
+        _error = null;
+        _loading = true;
+        StateHasChanged();
+        try
+        {
+            _offers = (await Api.GetOffersAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleCreateAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_createRequest.Name))
+            return;
+        _creating = true;
+        _error = null;
+        StateHasChanged();
+        try
+        {
+            await Api.CreateOfferAsync(new CreateOfferDto { Name = _createRequest.Name, Status = _createRequest.Status });
+            _createRequest.Name = "";
+            _createRequest.Status = "Pending";
+            await LoadOffers();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _creating = false;
+            StateHasChanged();
+        }
+    }
+}

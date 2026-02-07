@@ -1,0 +1,146 @@
+@namespace ExampleProject.Api.Components.Pages
+@page "/plants"
+@rendermode InteractiveServer
+@inject IApiClient Api
+
+<PageTitle>Plants — ExampleProject</PageTitle>
+
+<section class="section">
+    <h1 class="page-title">Plants</h1>
+    <p class="page-subtitle">Registered flexibility assets (PostgreSQL). List and register plants.</p>
+
+    <div class="section-block">
+        <h2 class="section-title">Register plant</h2>
+        <EditForm Model="_createRequest" OnValidSubmit="HandleCreateAsync" class="form form--inline">
+            <DataAnnotationsValidator />
+            <div class="form__row">
+                <div class="form__group">
+                    <label for="plant-name" class="form__label">Name</label>
+                    <InputText id="plant-name" class="form__input" @bind-Value="_createRequest.Name" placeholder="e.g. CHP Musterstadt" />
+                </div>
+                <div class="form__group">
+                    <label for="plant-type" class="form__label">Asset type</label>
+                    <InputText id="plant-type" class="form__input" @bind-Value="_createRequest.AssetType" placeholder="CHP, Battery, GasTurbine" />
+                </div>
+                <div class="form__group">
+                    <label for="plant-capacity" class="form__label">Capacity (MW)</label>
+                    <InputNumber id="plant-capacity" class="form__input" @bind-Value="_createRequest.CapacityMw" placeholder="2.5" />
+                </div>
+                <div class="form__group">
+                    <label for="plant-status" class="form__label">Status</label>
+                    <InputText id="plant-status" class="form__input" @bind-Value="_createRequest.Status" placeholder="Active" />
+                </div>
+                <div class="form__group form__group--actions">
+                    <button type="submit" class="btn btn--primary" disabled="@_creating">@(_creating ? "Registering…" : "Register")</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+
+    <div class="section-block">
+        <h2 class="section-title">All plants</h2>
+        @if (_loading)
+        {
+            <LoadingSpinner Text="Loading plants…" />
+        }
+        else if (!string.IsNullOrEmpty(_error))
+        {
+            <ErrorMessage Message="_error" OnRetry="LoadPlants" />
+        }
+        else if (_plants.Count == 0)
+        {
+            <EmptyState Icon="🏭" Title="No plants yet" Description="Register a plant above or run the population script." />
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table" role="grid">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Capacity (MW)</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Registered</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in _plants)
+                        {
+                            <tr>
+                                <td>@p.Name</td>
+                                <td><code class="code-inline">@p.AssetType</code></td>
+                                <td class="text-muted">@(p.CapacityMw?.ToString("N2") ?? "–")</td>
+                                <td><span class="badge badge--@(p.Status.ToLowerInvariant() == "active" ? "success" : "muted")">@p.Status</span></td>
+                                <td class="text-muted">@p.RegisteredAt.ToString("yyyy-MM-dd HH:mm")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private List<PlantDto> _plants = new();
+    private CreatePlantDto _createRequest = new() { Name = "", AssetType = "", Status = "Pending" };
+    private bool _loading = true;
+    private bool _creating;
+    private string? _error;
+
+    protected override async Task OnInitializedAsync() => await LoadPlants();
+
+    private async Task LoadPlants()
+    {
+        _error = null;
+        _loading = true;
+        StateHasChanged();
+        try
+        {
+            _plants = (await Api.GetPlantsAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleCreateAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_createRequest.Name))
+            return;
+        _creating = true;
+        _error = null;
+        StateHasChanged();
+        try
+        {
+            await Api.CreatePlantAsync(new CreatePlantDto
+            {
+                Name = _createRequest.Name,
+                AssetType = _createRequest.AssetType ?? "",
+                CapacityMw = _createRequest.CapacityMw,
+                Status = _createRequest.Status
+            });
+            _createRequest.Name = "";
+            _createRequest.AssetType = "";
+            _createRequest.CapacityMw = null;
+            _createRequest.Status = "Pending";
+            await LoadPlants();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _creating = false;
+            StateHasChanged();
+        }
+    }
+}

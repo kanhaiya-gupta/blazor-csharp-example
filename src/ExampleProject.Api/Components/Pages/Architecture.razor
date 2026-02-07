@@ -1,0 +1,65 @@
+@namespace ExampleProject.Api.Components.Pages
+@page "/architecture"
+@rendermode InteractiveServer
+<PageTitle>Architecture — ExampleProject</PageTitle>
+
+<section class="section">
+    <h1 class="page-title">Architecture</h1>
+    <p class="page-subtitle">Figurative view: data stores, tables, and how they tell the story.</p>
+
+    <div class="section-block arch-block">
+        <div class="arch-diagram">
+            <div class="arch-layer arch-app">
+                <div class="arch-app-box">
+                    <span class="arch-app-icon" aria-hidden="true">◆</span>
+                    <strong>Blazor UI + API</strong>
+                    <span class="arch-app-detail">Single host, REST + Server UI</span>
+                </div>
+            </div>
+
+            <div class="arch-layer arch-stores">
+                <div class="arch-store arch-postgres">
+                    <div class="arch-store-header">
+                        <span class="arch-store-icon" aria-hidden="true">▣</span>
+                        PostgreSQL
+                    </div>
+                    <p class="arch-store-desc">Relational: offers, plants, time-series, alerts</p>
+                    <ul class="arch-list">
+                        <li><NavLink href="/offers">FlexibilityOffers</NavLink> — commercial offers</li>
+                        <li><NavLink href="/plants">Plants</NavLink> — registered assets</li>
+                        <li><NavLink href="/dashboard">MeterReadings</NavLink> — time-series (MW)</li>
+                        <li><NavLink href="/dashboard">Alerts</NavLink> — detected anomalies</li>
+                    </ul>
+                </div>
+                <div class="arch-arrow" aria-hidden="true">
+                    <span class="arch-arrow-label">data flow</span>
+                </div>
+                <div class="arch-store arch-mongo">
+                    <div class="arch-store-header">
+                        <span class="arch-store-icon" aria-hidden="true">◉</span>
+                        MongoDB
+                    </div>
+                    <p class="arch-store-desc">Document: audit, market data, dispatch log</p>
+                    <ul class="arch-list">
+                        <li><NavLink href="/audit">audit</NavLink> — who did what</li>
+                        <li><NavLink href="/operations">market_signals</NavLink> — incoming prices</li>
+                        <li><NavLink href="/operations">dispatch_log</NavLink> — flexibility responses</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="arch-layer arch-flow">
+                <div class="arch-flow-item">
+                    <span class="arch-flow-from">Market signals</span>
+                    <span class="arch-flow-arrow">→</span>
+                    <span class="arch-flow-to">Dispatch log</span>
+                </div>
+                <div class="arch-flow-item">
+                    <span class="arch-flow-from">Meter readings</span>
+                    <span class="arch-flow-arrow">→</span>
+                    <span class="arch-flow-to">Alerts</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,134 @@
+@namespace ExampleProject.Api.Components.Pages
+@page "/audit"
+@rendermode InteractiveServer
+@inject IApiClient Api
+
+<PageTitle>Audit log — ExampleProject</PageTitle>
+
+<section class="section">
+    <h1 class="page-title">Audit log</h1>
+    <p class="page-subtitle">Recent activity from MongoDB. View and log audit entries.</p>
+
+    <div class="section-block">
+        <h2 class="section-title">Log action</h2>
+        <EditForm Model="_createRequest" OnValidSubmit="HandleLogAsync" class="form form--inline">
+            <DataAnnotationsValidator />
+            <div class="form__row">
+                <div class="form__group">
+                    <label for="audit-action" class="form__label">Action</label>
+                    <InputText id="audit-action" class="form__input" @bind-Value="_createRequest.Action" placeholder="e.g. ViewPage" />
+                </div>
+                <div class="form__group">
+                    <label for="audit-user" class="form__label">User ID</label>
+                    <InputText id="audit-user" class="form__input" @bind-Value="_createRequest.UserId" placeholder="user-001" />
+                </div>
+                <div class="form__group form__group--flex">
+                    <label for="audit-details" class="form__label">Details</label>
+                    <InputText id="audit-details" class="form__input" @bind-Value="_createRequest.Details" placeholder="Optional details" />
+                </div>
+                <div class="form__group form__group--actions">
+                    <button type="submit" class="btn btn--primary" disabled="@_logging">@(_logging ? "Logging…" : "Log")</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+
+    <div class="section-block">
+        <h2 class="section-title">Recent entries</h2>
+        @if (_loading)
+        {
+            <LoadingSpinner Text="Loading audit log…" />
+        }
+        else if (!string.IsNullOrEmpty(_error))
+        {
+            <ErrorMessage Message="_error" OnRetry="LoadAudit" />
+        }
+        else if (_entries.Count == 0)
+        {
+            <EmptyState Icon="📜" Title="No audit entries" Description="Log an action above or run the population script to seed data." />
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table" role="grid">
+                    <thead>
+                        <tr>
+                            <th scope="col">Action</th>
+                            <th scope="col">User</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var e in _entries)
+                        {
+                            <tr>
+                                <td><code class="code-inline">@e.Action</code></td>
+                                <td>@e.UserId</td>
+                                <td class="text-muted">@e.Timestamp.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td class="text-muted">@e.Details</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-muted" style="margin-top: 0.75rem;">Showing latest @_entries.Count entries.</p>
+        }
+    </div>
+</section>
+
+@code {
+    private List<AuditEntryDto> _entries = new();
+    private CreateAuditDto _createRequest = new() { Action = "" };
+    private bool _loading = true;
+    private bool _logging;
+    private string? _error;
+
+    protected override async Task OnInitializedAsync() => await LoadAudit();
+
+    private async Task LoadAudit()
+    {
+        _error = null;
+        _loading = true;
+        StateHasChanged();
+        try
+        {
+            _entries = (await Api.GetAuditRecentAsync(20)).ToList();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleLogAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_createRequest.Action))
+            return;
+        _logging = true;
+        _error = null;
+        StateHasChanged();
+        try
+        {
+            await Api.LogAuditAsync(new CreateAuditDto { Action = _createRequest.Action, UserId = _createRequest.UserId, Details = _createRequest.Details });
+            _createRequest.Action = "";
+            _createRequest.UserId = null;
+            _createRequest.Details = null;
+            await LoadAudit();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _logging = false;
+            StateHasChanged();
+        }
+    }
+}

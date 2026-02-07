@@ -1,0 +1,140 @@
+@namespace ExampleProject.Api.Components.Pages
+@page "/operations"
+@rendermode InteractiveServer
+@inject IApiClient Api
+
+<PageTitle>Operations — ExampleProject</PageTitle>
+
+<section class="section">
+    <h1 class="page-title">Operations</h1>
+    <p class="page-subtitle">MongoDB story: market signals (inputs) and dispatch log (flexibility responses).</p>
+
+    <div class="section-block">
+        <h2 class="section-title">Recent market signals</h2>
+        <p class="text-muted">Incoming price/market data (day-ahead, intraday, balancing) that drives flexibility decisions.</p>
+        @if (_loadingSignals)
+        {
+            <LoadingSpinner Text="Loading market signals…" />
+        }
+        else if (!string.IsNullOrEmpty(_errorSignals))
+        {
+            <ErrorMessage Message="_errorSignals" OnRetry="LoadData" />
+        }
+        else if (_signals.Count == 0)
+        {
+            <EmptyState Icon="📊" Title="No market signals" Description="Run the population script to seed market_signals (MongoDB)." />
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table" role="grid">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time</th>
+                            <th scope="col">Market</th>
+                            <th scope="col">Price (€/MWh)</th>
+                            <th scope="col">Volume (MW)</th>
+                            <th scope="col">Region</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in _signals)
+                        {
+                            <tr>
+                                <td class="text-muted">@s.Timestamp.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td><code class="code-inline">@s.Market</code></td>
+                                <td>@(s.PriceEurPerMwh?.ToString("N2") ?? "–")</td>
+                                <td>@(s.VolumeMw?.ToString("N2") ?? "–")</td>
+                                <td class="text-muted">@(s.Region ?? "–")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div class="section-block">
+        <h2 class="section-title">Recent dispatch log</h2>
+        <p class="text-muted">Records of when flexibility was activated (plant dispatched for a market).</p>
+        @if (_loadingDispatch)
+        {
+            <LoadingSpinner Text="Loading dispatch log…" />
+        }
+        else if (!string.IsNullOrEmpty(_errorDispatch))
+        {
+            <ErrorMessage Message="_errorDispatch" OnRetry="LoadData" />
+        }
+        else if (_dispatches.Count == 0)
+        {
+            <EmptyState Icon="⚡" Title="No dispatch records" Description="Run the population script to seed dispatch_log (MongoDB)." />
+        }
+        else
+        {
+            <div class="table-wrap">
+                <table class="data-table" role="grid">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time</th>
+                            <th scope="col">Plant</th>
+                            <th scope="col">Volume (MW)</th>
+                            <th scope="col">Market</th>
+                            <th scope="col">Direction</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var d in _dispatches)
+                        {
+                            <tr>
+                                <td class="text-muted">@d.Timestamp.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>@d.PlantName</td>
+                                <td>@d.VolumeMw.ToString("N2")</td>
+                                <td><code class="code-inline">@d.Market</code></td>
+                                <td><span class="badge badge--@(d.Direction == "Up" ? "success" : "muted")">@d.Direction</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</section>
+
+@code {
+    private List<MarketSignalDto> _signals = new();
+    private List<DispatchLogDto> _dispatches = new();
+    private bool _loadingSignals = true;
+    private bool _loadingDispatch = true;
+    private string? _errorSignals;
+    private string? _errorDispatch;
+
+    protected override async Task OnInitializedAsync() => await LoadData();
+
+    private async Task LoadData()
+    {
+        _errorSignals = null;
+        _errorDispatch = null;
+        _loadingSignals = true;
+        _loadingDispatch = true;
+        StateHasChanged();
+        try
+        {
+            var signalsTask = Api.GetMarketSignalsRecentAsync(20);
+            var dispatchTask = Api.GetDispatchLogRecentAsync(20);
+            await Task.WhenAll(signalsTask, dispatchTask);
+            _signals = (await signalsTask).ToList();
+            _dispatches = (await dispatchTask).ToList();
+        }
+        catch (Exception ex)
+        {
+            _errorSignals = ex.Message;
+            _errorDispatch = ex.Message;
+        }
+        finally
+        {
+            _loadingSignals = false;
+            _loadingDispatch = false;
+            StateHasChanged();
+        }
+    }
+}

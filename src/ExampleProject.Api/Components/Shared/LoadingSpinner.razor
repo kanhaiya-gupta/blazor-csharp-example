@@ -1,0 +1,10 @@
+@namespace ExampleProject.Api.Components.Shared
+
+<div class="loading" role="status" aria-label="Loading">
+    <span class="loading__spinner"></span>
+    <span class="loading__text">@Text</span>
+</div>
+
+@code {
+    [Parameter] public string Text { get; set; } = "Loading…";
+}
